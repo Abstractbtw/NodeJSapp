@@ -1,0 +1,82 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>NodeJS Subjects</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-amber.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Subjects application</h1>
+
+      <div class="line"></div>
+
+      <h2> Subjects </h2>
+
+      <div class="subjects">
+        <table class="w3-table w3-striped">
+          <thead>
+            <tr>
+              <td>Subject</td>
+              <td>Teacher</td>
+            </tr>
+            <tr class="grayline"></tr>
+          </thead>
+          <tbody>
+            <% for(var i = 0; i < subjects.length; i++) {%>
+              <tr key: i>
+                <td><%= subjects[i].name %></td>
+                <td><%= subjects[i].teacher %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <br>
+      <div class="line"></div>
+
+      <h2>Add subject</h1>
+
+        <form action="/subjects" method="POST">
+          <input type="text" placeholder="name" name="name" />
+          <input type="text" placeholder="teacher" name="teacher" />
+          <button class="mainbutton" type="submit">Submit</button>
+        </form>
+
+      <br>  
+      <div class="line"></div>
+
+      <div>
+        <h2>Delete subject</h2>
+        <p class="graytext">Choose subject to delete</p>
+        <input type="text" placeholder="name" name="name" id="deleteInput"/>
+        <button class="mainbutton" id="delete-button">Delete</button>
+      </div>
+
+      <br>
+      <div class="line"></div>
+
+      <div>
+        <h2>Update Subject</h2>
+        <p class="graytext">Choose subject to update information</p>
+        <input type="text" placeholder="name" name="name" id="updateInput"/>
+        <br><br/>
+        <div class="grayline"></div>
+        <p class="graytext">Enter updated information</p>
+        <input type="text" name="name" id="nameInput"/>
+        <input type="text" name="name" id="teacherInput"/>
+        <button class="mainbutton" id="update-button">Update</button>
+      </div>
+
+    </div>
+
+    <script src="/main.js"></script>
+  </body>
+</html>
