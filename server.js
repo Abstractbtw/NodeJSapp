@@ -1,10 +1,12 @@
 const express = require('express')
 const bodyParser= require('body-parser')
+const { ObjectId } = require('mongodb')
 const app = express()
+const config = require("./config/default.json")
 const MongoClient = require('mongodb').MongoClient
 app.set('view engine', 'ejs')
 
-MongoClient.connect('mongodb+srv://Vldzaharenko:qwe123@cluster0.aaek3rb.mongodb.net/?retryWrites=true&w=majority', { useUnifiedTopology: true })
+MongoClient.connect(config.dbUrl)
 .then(client => {
     console.log('Connected to Database')
     
@@ -18,36 +20,26 @@ MongoClient.connect('mongodb+srv://Vldzaharenko:qwe123@cluster0.aaek3rb.mongodb.
     
     app.put('/subjects', (req, res) => {
       subjectsCollection.findOneAndUpdate(
-        { name: req.body.newname
-        },
-        {
-        $set: {
+        {"_id": ObjectId(req.body.index)},
+        {$set: {
           name: req.body.name,
           teacher: req.body.teacher
-        }
-        },
-        {
-          upsert: true
-        }
+        }},
+        {upsert: true}
       )
       .then(result => {
         res.json('Success')
       })
-      .catch(error => console.error(error))
     })
 
 
     app.delete('/subjects', (req, res) => {
       subjectsCollection.deleteOne(
-        { name: req.body.name }
+        { "_id": ObjectId(req.body.index) }
       )
-        .then(result => {
-          if (result.deletedCount === 0) {
-            return res.json('No subject to delete')
-          }
-          res.json(`Deleted subject`)
-        })
-        .catch(error => console.error(error))
+      .then(response => {
+        res.redirect('/')
+      })
     })
 
 
@@ -56,16 +48,14 @@ MongoClient.connect('mongodb+srv://Vldzaharenko:qwe123@cluster0.aaek3rb.mongodb.
         .then(results => {
           res.render('index.ejs', { subjects: results })
         })
-        .catch(error => console.error(error))
     })
       
 
     app.post('/subjects', (req, res) => {
       subjectsCollection.insertOne(req.body)
-        .then(result => {
-          res.redirect('/')
-        })
-        .catch(error => console.error(error))
+      .then(response => {
+        res.redirect('/')
+      })
     })
       
 
