@@ -73,7 +73,6 @@ MongoClient.connect('mongodb+srv://Vldzaharenko:qwe123@cluster0.aaek3rb.mongodb.
       console.log('listening on 3000')
     })
 })
-.catch(console.error)
 
 
 

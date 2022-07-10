@@ -1,41 +1,60 @@
-const updateButton = document.querySelector('#update-button')
-const deleteButton = document.querySelector('#delete-button')
+var UpdateId = ""
 
-updateButton.addEventListener('click', _ => {
-  fetch('/subjects', {
-    method: 'put',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name: document.getElementById("nameInput").value,
-      teacher: document.getElementById("teacherInput").value,
-      newname: document.getElementById("updateInput").value 
+function AddSubject(){
+  if (document.getElementById("addName").value && document.getElementById("addTeacher").value){
+    fetch('/subjects', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: document.getElementById("addName").value,
+        teacher: document.getElementById("addTeacher").value,
+      })
     })
-  })
-  .then(res => {
-    if (res.ok) return res.json()
-  })
-  .then(response => {
-    window.location.reload(true)
-  })
-})
+  } else {
+    alert("Fill all the fields")
+  }
+  
+}
 
-deleteButton.addEventListener('click', _ => {
-  fetch('/subjects', {
-    method: 'delete',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name: document.getElementById("deleteInput").value
+function ShowUpdate(id) {
+  const answer = window.confirm("Are you sure?")
+  if (answer) {
+    document.getElementById("update").style.display = "block"
+    UpdateId = id
+  }
+}
+
+function UpdateItem() {
+  if (document.getElementById("nameInput").value && document.getElementById("teacherInput").value){
+    fetch('/subjects', {
+      method: 'put',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: document.getElementById("nameInput").value,
+        teacher: document.getElementById("teacherInput").value,
+        index: UpdateId,
+      })
     })
-  })
     .then(res => {
-      if (res.ok) return res.json()
+      window.location.reload(true)
     })
-    .then(response => {
-      if (response !== 'No subject to delete') {
-        window.location.reload(true)
-      }
+  } else {
+    alert("Fill all the fields")
+  }
+}
+
+function DeleteItem(id) {
+  const answer = window.confirm("Are you sure?")
+  if (answer) {
+    fetch('/subjects', {
+      method: 'delete',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        index: id,
+      })
     })
-    .then(data => {
-      window.location.reload()
+    .then(res => {
+      window.location.reload(true)
     })
-})
+  }
+}
