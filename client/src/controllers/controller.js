@@ -33,8 +33,14 @@ export const updateitem = async (ind) => {
   try{
       let newname = document.getElementById("nameInput").value
       let newteacher = document.getElementById("teacherInput").value
-      const response = await axios.post(`http://localhost:5000/api/updatesubject`, {ind, newname, newteacher})
-      document.location.reload()
+      if(newname && newteacher){
+        const response = await axios.post(`http://localhost:5000/api/updatesubject`, {ind, newname, newteacher})
+        document.location.reload()
+      }
+      else{
+        alert("Fill all the fields")
+        document.getElementById("update").style.display = "block"
+      }
   } catch (e) {
     alert(e.response.data.message)
     console.log(e.response.data.message)
