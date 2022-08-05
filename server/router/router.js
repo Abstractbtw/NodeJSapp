@@ -7,26 +7,23 @@ const { ObjectId } = require('mongodb')
 
 
 router.post('/newsubject',
-  [
-    check('subjectname', 'Enter name').isLength({min:1}),
-    check('teacher', 'Enter description').isLength({min:1})
-  ], 
   async (req, res) => {
 
   try {
 
-    const errors = validationResult(req)
-    
-    if (!errors.isEmpty()) {
-        return res.status(400).json({message: "Fill all the fields", errors})
-    }
-
     const {subjectname, teacher} = req.body
+
+    const candidate = await Subject.findOne({teacher})
+
+    if(candidate) {
+      return res.status(400).json({message: `Teacher ${teacher} already added`})
+    }
 
     const subject = new Subject({subjectname, teacher})
 
     await subject.save()
     return res.json({message: "User was created"})
+    
 
   } catch (e) {
     console.log(e)
@@ -53,13 +50,13 @@ router.post('/deletesubject', async (req, res) => {
 
 router.post('/updatesubject', async (req, res) => {
     try {
-        const {ind, newname, newteacher} = req.body
+        const {ind, subjectname, teacher} = req.body
     
         await Subject.findOneAndUpdate({
           _id: ObjectId(ind)
         }, {
-            subjectname: newname,
-            teacher: newteacher
+            subjectname: subjectname,
+            teacher: teacher
         })
     
         return res.json()

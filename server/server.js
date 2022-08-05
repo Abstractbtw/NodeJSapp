@@ -1,6 +1,6 @@
 const express = require('express')
 const mongoose = require("mongoose")
-const config = require("./config/default.json")
+const config = require("config")
 const Router = require("./router/router.js")
 const corsMiddleware = require("./middleware/cors.middleware")
 const bodyParser= require('body-parser')
