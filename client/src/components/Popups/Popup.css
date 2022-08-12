@@ -28,15 +28,32 @@ input{
   margin-right: 10px;
 }
 
+.disabled_mainbutton {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0);
+  color: black;
+  border: 3px solid gray;
+  transition-duration: 0.2s;
+  border-radius: 9px;
+}
+
 .mainbutton {
+  cursor: pointer;
   background-color: rgba(0, 0, 0, 0);
   color: black;
   border: 3px solid #4CAF50;
   transition-duration: 0.2s;
-  border-radius: 5px;
+  border-radius: 9px;
 }
   
 .mainbutton:hover {
   background-color: #4CAF50;
   color: white;
+}
+
+.error_text{
+  font-size: 10px;
+  width: 100%;
+  text-align: left;
+  color: red;
 }

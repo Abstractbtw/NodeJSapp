@@ -22,8 +22,6 @@ router.post('/newsubject',
     const subject = new Subject({subjectname, teacher})
 
     await subject.save()
-    return res.json({message: "User was created"})
-    
 
   } catch (e) {
     console.log(e)

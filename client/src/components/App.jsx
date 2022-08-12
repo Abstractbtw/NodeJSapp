@@ -8,7 +8,9 @@ import ReactPaginate from 'react-paginate'
 
 function App() {
 
-  const [subjects, setSubjects] = useState([])
+  alert(process.env.REACT_APP_API_URL)
+
+  const [dataLength, setDataLength] = useState(0)
 
   const [showAdd, setShowAdd] = useState(false)
   const [showUpdate, setShowUpdate] = useState(false)
@@ -17,12 +19,6 @@ function App() {
   const [updateId, setUpdateId] = useState(null)
   const [updateName, setUpdateName] = useState(null)
   const [updateTeacher, setUpdateTeacher] = useState(null)
-
-  useEffect(function () {
-    fetch(`http://localhost:${port}/subjects`)
-    .then(res => res.json())
-    .then(setSubjects)
-  }, [])
 
   function handleClick (ind, subjectname, teacher){
     setUpdateId(ind)
@@ -47,28 +43,49 @@ function App() {
       </>
     )
   }
+
+  function SubjectsCount({currentSubjects}){
+    return(
+      <>
+        {currentSubjects &&
+          <tr className="table_tr" style={{backgroundColor: "white"}}>
+            <td>
+              <div>Subjects on page: {currentSubjects.length}</div>
+            </td>
+          </tr>
+        }
+      </>
+    )
+  }
+
+  let subjectsPerPage = 5
   
-  function PaginatedSubjects({ subjectsPerPage }) {
+  function PaginatedSubjects() {
     const [currentSubjects, setCurrentSubjects] = useState(null)
     const [pageCount, setPageCount] = useState(0)
     const [subjectOffset, setSubjectOffset] = useState(0)
   
     useEffect(() => {
       const endOffset = subjectOffset + subjectsPerPage
-      setCurrentSubjects(subjects.slice(subjectOffset, endOffset))
-      setPageCount(Math.ceil(subjects.length / subjectsPerPage))
+
+      fetch(`${process.env.REACT_APP_API_URL}/subjects`)
+      .then(res => res.json())
+      .then(data => (setDataLength(data.length), setCurrentSubjects(data.slice(subjectOffset, endOffset))))
+
+      setPageCount(Math.ceil(dataLength / subjectsPerPage))
     }, [subjectOffset, subjectsPerPage])
   
     const handlePageClick = (event) => {
-      const newOffset = (event.selected * subjectsPerPage) % subjects.length
+      const newOffset = (event.selected * subjectsPerPage) % dataLength
       setSubjectOffset(newOffset)
     }
   
     return (
       <>
-      {subjects.length > 0 ? (
+      {dataLength > 0 ? (
         <>
           <Subjects currentSubjects={currentSubjects} />
+          <SubjectsCount currentSubjects={currentSubjects} />
           <tr style={{backgroundColor: "white"}}>
             <td>
               <ReactPaginate
@@ -109,6 +126,13 @@ function App() {
 
         <h2> Subjects </h2>
 
+        <br/> 
+        <button className="main_button" onClick={() => (setShowAdd(true))}>Add subject</button>
+        <br/> 
+
+        <br/>
+        <div style={{borderBottom: "2px solid black"}}></div>
+
         <div className="subjects">
           <table className="w3-table w3-striped">
             <thead>
@@ -119,15 +143,10 @@ function App() {
               <tr style={{borderBottom: "2px solid lightgrey"}}></tr>
             </thead>
             <tbody>
-              <PaginatedSubjects subjectsPerPage={5} />
+              <PaginatedSubjects/>
             </tbody>
           </table>
         </div>
-        <div style={{borderBottom: "2px solid black"}}></div>
-
-        <br/>  
-        <button className="main_button" style={{marginLeft: "20px"}} onClick={() => (setShowAdd(true))}>Add subject</button>
-        <br/>  
 
       </div>
     </div>
