@@ -85,6 +85,18 @@ ul {
   transition-duration: 0.2s;
 }
 
+.pagination > li.disabled > a {
+  color: black;
+  background-color: #fff;
+  border: 3px solid gray;
+}
+
+.pagination > li.disabled:hover > a {
+  color: black;
+  background-color: #fff;
+  border: 3px solid gray;
+}
+
 .pagination > li.active > a {
   color: #fff;
   background-color: #4CAF50;

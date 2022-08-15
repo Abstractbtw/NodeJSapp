@@ -8,8 +8,6 @@ import ReactPaginate from 'react-paginate'
 
 function App() {
 
-  alert(process.env.REACT_APP_API_URL)
-
   const [dataLength, setDataLength] = useState(0)
 
   const [showAdd, setShowAdd] = useState(false)
