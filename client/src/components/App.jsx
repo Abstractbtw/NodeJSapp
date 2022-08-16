@@ -1,14 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import './app.css'
-import {port} from '../controllers/controller.js'
 import AddSubject from "./Popups/AddSubject"
 import UpdateSubject from "./Popups/UpdateSubject"
 import Confirmation from "./Popups/Confirmation"
 import ReactPaginate from 'react-paginate'
 
 function App() {
-
-  const [dataLength, setDataLength] = useState(0)
 
   const [showAdd, setShowAdd] = useState(false)
   const [showUpdate, setShowUpdate] = useState(false)
@@ -55,47 +52,39 @@ function App() {
       </>
     )
   }
-
-  let subjectsPerPage = 5
   
   function PaginatedSubjects() {
-    const [currentSubjects, setCurrentSubjects] = useState(null)
+
+    const [page, setPage] = useState(0)
+
+    const [data, setData] = useState([])
+
     const [pageCount, setPageCount] = useState(0)
-    const [subjectOffset, setSubjectOffset] = useState(0)
-  
-    useEffect(() => {
-      const endOffset = subjectOffset + subjectsPerPage
 
-      fetch(`${process.env.REACT_APP_API_URL}/subjects`)
+    useEffect(function () {
+      fetch(`${process.env.REACT_APP_API_URL}/subjects?page=${page}`)
       .then(res => res.json())
-      .then(data => (setDataLength(data.length), setCurrentSubjects(data.slice(subjectOffset, endOffset))))
-
-      setPageCount(Math.ceil(dataLength / subjectsPerPage))
-    }, [subjectOffset, subjectsPerPage])
-  
-    const handlePageClick = (event) => {
-      const newOffset = (event.selected * subjectsPerPage) % dataLength
-      setSubjectOffset(newOffset)
-    }
+      .then(({totalPages, subjects}) => (setData(subjects), setPageCount(totalPages)))
+    }, [page])
   
     return (
       <>
-      {dataLength > 0 ? (
+      {data.length > 0 ? (
         <>
-          <Subjects currentSubjects={currentSubjects} />
-          <SubjectsCount currentSubjects={currentSubjects} />
+          <Subjects currentSubjects={data} />
+          <SubjectsCount currentSubjects={data} />
           <tr style={{backgroundColor: "white"}}>
             <td>
               <ReactPaginate
                 breakLabel="..."
-                nextLabel="next >"
-                previousLabel="< previous"
-                onPageChange={handlePageClick}
+                nextLabel=">"
+                previousLabel="<"
+                containerClassName={'pagination'}
+                activeClassName={'active'}
+                onPageChange={(event) => setPage(event.selected)}
                 pageRangeDisplayed={3}
                 pageCount={pageCount}
                 renderOnZeroPageCount={null}
-                containerClassName={'pagination'}
-                activeClassName={'active'}
               />
             </td>
           </tr>

@@ -9,7 +9,7 @@ function AddSubject(props) {
   const [data, setData] = useState([])
 
   useEffect(function () {
-    fetch(`${process.env.REACT_APP_API_URL}/subjects`)
+    fetch(`${process.env.REACT_APP_API_URL}/teachers`)
     .then(res => res.json())
     .then(data => setData(data))
   }, [])
@@ -18,8 +18,8 @@ function AddSubject(props) {
 
   function checkSubject(){
     let includes = 0
-    data.map(project => {
-      if(project.teacher === Teacher){
+    data.map(teachers => {
+      if(teachers.teacher === Teacher){
         includes = 1
       }
     })

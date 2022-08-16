@@ -25,7 +25,6 @@ export const deleteitem = async (ind) => {
 export const updateitem = async (ind, subjectname, teacher) => {
   try{
     const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/updatesubject`, {ind, subjectname, teacher})
-    document.location.reload()
   } catch (e) {
     alert(e.response.data.message)
     console.log(e.response.data.message)

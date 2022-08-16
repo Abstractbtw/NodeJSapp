@@ -5,6 +5,8 @@ const Router = require("./router/router.js")
 const corsMiddleware = require("./middleware/cors.middleware")
 const bodyParser= require('body-parser')
 
+const Subject = require("./models/Subject")
+
 const app = express()
 const PORT = config.serverPort
 
@@ -23,12 +25,24 @@ const start = async () => {
     
     const db = mongoose.connection
 
-    app.get('/subjects', (req, res) => {
-      db.collection("subjects").find({}).toArray(function(err, result) {
-        if (err) throw err
-        res.json(result)
-      });
+    app.get('/teachers', async (req, res) => {
+      const subjects = await Subject.find({}, {_id: 0, teacher: 1})
+      res.json(subjects)
     })
+
+    app.get('/subjects', async (req, res) => {
+      const PAGE_SIZE = 5
+      const page = parseInt(req.query.page || "0")
+      const total = await Subject.countDocuments({})
+      const subjects = await Subject.find({})
+        .limit(PAGE_SIZE)
+        .skip(PAGE_SIZE * page)
+      res.json({
+        totalPages: Math.ceil(total / PAGE_SIZE),
+        subjects,
+      })
+    })
+
 
     app.listen(PORT, () => {
         console.log('Server started on port', PORT)
